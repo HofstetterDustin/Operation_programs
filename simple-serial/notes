@@ -1,0 +1,23 @@
+int inByte = 0          //var to hold incoming serial data//
+long blinkTimer = 0;    //keeps track of how long since the LED was last turned off//
+
+int blinkInterval = 1000;   //a full second from on to off to on again//
+
+void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);   //set pin 13 to be an output//
+    sERIAL.BEGIN(9600);             //config the serial port for 9600 bps//
+}
+
+void loop() {           //if there are any incoming bytes available to read//
+    if (Serial.available() > 0) {
+        inByte = Serial.read();     //then read the first available byte//
+        Serial.write(inByte+1);     //add one to it and send the result out//
+    }
+    if (millis() - blinkTimer >= blinkInterval / 2) {   //keep blinking the LED//
+        digitalWrite(LED_BUILTIN, HIGH);    //turn the LED on//
+    }
+    if (millis() - blinkTimer >= blinkInterval) {   
+        digitalWrite(LED_BUILTIN, LOW);
+        blinkTimer = millis();
+    }
+}
